@@ -1,0 +1,90 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/ui/victory_screen.gd" id="1_victory"]
+[ext_resource type="Script" path="res://scenes/level/backdrop.gd" id="2_backdrop"]
+[ext_resource type="Script" path="res://scenes/player/fairy_art.gd" id="3_fairy"]
+
+[node name="VictoryScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_victory")
+
+[node name="Backdrop" type="Node2D" parent="."]
+script = ExtResource("2_backdrop")
+
+[node name="Fireworks" type="Node2D" parent="."]
+
+[node name="Fairy" type="Node2D" parent="."]
+position = Vector2(96, 250)
+scale = Vector2(3, 3)
+script = ExtResource("3_fairy")
+
+[node name="Content" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 20.0
+offset_bottom = 110.0
+grow_horizontal = 2
+theme_override_constants/separation = 2
+
+[node name="Hooray" type="Label" parent="Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.55, 1)
+theme_override_colors/font_outline_color = Color(0.55, 0.25, 0.55, 1)
+theme_override_constants/outline_size = 14
+theme_override_font_sizes/font_size = 48
+text = "Hooray!"
+horizontal_alignment = 1
+
+[node name="Story" type="Label" parent="Content"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Wren made it all the way to the Starlight Castle!"
+horizontal_alignment = 1
+
+[node name="Stats" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -118.0
+offset_bottom = -92.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 0.95, 0.75, 1)
+theme_override_font_sizes/font_size = 16
+text = "You collected 0 pixie dust!"
+horizontal_alignment = 1
+
+[node name="Buttons" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -200.0
+offset_top = -80.0
+offset_right = 200.0
+offset_bottom = -30.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="AgainButton" type="Button" parent="Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Play Again"
+
+[node name="TitleButton" type="Button" parent="Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Title Screen"

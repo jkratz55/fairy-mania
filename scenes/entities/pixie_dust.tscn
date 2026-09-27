@@ -1,0 +1,16 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/entities/pixie_dust.gd" id="1_script"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1"]
+radius = 10.0
+
+[node name="PixieDust" type="Area2D"]
+collision_layer = 8
+collision_mask = 2
+monitorable = false
+script = ExtResource("1_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 0)
+shape = SubResource("CircleShape2D_1")
