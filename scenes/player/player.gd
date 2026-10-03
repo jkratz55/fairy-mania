@@ -292,6 +292,19 @@ func hurt(from: Vector2) -> void:
 	Audio.sfx("hurt")
 
 
+## Pushes Wren away from `from` without hurting her (the Queen's shield, the Magic Mirror).
+## A `strength` above 1 sends her further.
+func bounce_back(from: Vector2, strength: float = 1.0) -> void:
+	if _knocked_out:
+		return
+	var away: float = signf(global_position.x - from.x)
+	if away == 0.0:
+		away = -_facing
+	velocity = Vector2(away * 230.0 * strength, -260.0 * minf(strength, 1.4))
+	_stun_timer = HURT_STUN_TIME
+	art.squash(Vector2(1.25, 0.8))
+
+
 func heal(amount: int = 1) -> void:
 	hearts = mini(hearts + amount, max_hearts)
 

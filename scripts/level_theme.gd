@@ -134,6 +134,20 @@ static func create(theme_id: String) -> LevelTheme:
 			t.hazard = Color(0.62, 0.4, 0.78)
 			t.hazard_tip = Color(0.96, 0.82, 1.0)
 			t.accents = [Color(1.0, 0.5, 0.52), Color(1.0, 0.82, 0.4), Color(0.5, 0.85, 1.0), Color(0.76, 0.6, 1.0)]
+		"castle":
+			t.style = "castle"
+			t.sky_top = Color(0.1, 0.07, 0.22)
+			t.sky_bottom = Color(0.34, 0.2, 0.44)
+			t.top = Color(0.58, 0.48, 0.76)
+			t.top_dark = Color(0.42, 0.33, 0.6)
+			t.fill = Color(0.34, 0.28, 0.48)
+			t.fill_dark = Color(0.22, 0.18, 0.34)
+			t.speck = Color(0.27, 0.22, 0.4)
+			t.platform = Color(0.6, 0.52, 0.78)
+			t.platform_dark = Color(0.4, 0.33, 0.58)
+			t.hazard = Color(0.48, 0.3, 0.72)
+			t.hazard_tip = Color(0.95, 0.75, 1.0)
+			t.accents = [Color(1.0, 0.82, 0.4), Color(1.0, 0.55, 0.8), Color(0.55, 0.85, 1.0), Color(0.75, 0.55, 1.0)]
 		_:
 			t.id = "meadow"
 			t.style = "grass"

@@ -1,7 +1,8 @@
 # Fairy Mania ✨
 
 A cozy 2D side-scrolling platformer for kids aged 6–10, built with **Godot 4.7** and statically typed GDScript.
-Help **Wren** the fairy hop, glide and fly through nine worlds to reach the Starlight Castle.
+Help **Wren** the fairy hop, glide and fly through nine worlds to the Starlight Castle, then break the Evil Fairy
+Queen's Magic Mirror to save the fairy world.
 
 Everything is original: all art is drawn in code with `_draw()`, and all sound effects and music are synthesized
 at runtime. There are no imported image or audio files, so there's nothing borrowed from Disney or anyone else.
@@ -32,6 +33,8 @@ Wren (copper curls, a daisy clip, a lavender petal dress and butterfly wings) is
 - Dust comes back after a knockout, and flying over the goal gate still counts.
 - Every big flying gap has rest spots below (docks, crystal ledges, ice ledges, branches, wafers, rainbow bridges,
   cloud rests) spaced as a stairway, so running out of flight time is never a dead end.
+- The final boss can't be hurt, but she can't hurt Wren by touching her either: her shield just bounces Wren away.
+  Only her slow, glowing magic stars hurt. Cracks in her mirror stay after a knockout, so every try makes progress.
 
 ## The levels
 1. **Blossom Meadow** (sunny day): the tutorial level, with signs, a first moving platform and an optional sky route.
@@ -49,6 +52,11 @@ Wren (copper curls, a daisy clip, a lavender petal dress and butterfly wings) is
 8. **Rainbow Falls** (waterfalls): lily pads over plunge pools, a bubble spring up the tall cliff, and a flight across
    the Great Waterfall on the way up to the clouds.
 9. **Starlight Clouds** (night sky): cloud islands, big gaps to fly across, and the Starlight Castle.
+10. **The Magic Mirror** (inside the castle): the final battle against Queen Nightshade, the Evil Fairy Queen.
+    She flies around the throne room and shoots magic stars at Wren. Wren can't hurt her, but the Magic Mirror
+    behind her is where her power comes from. Touch it to crack it (a bubble protects it for a few seconds after
+    each crack, and she gets faster). Three cracks break it, the Queen loses her power and flies away, and the
+    castle lights up again. Reach the mirror with the cushion spring, the balcony ledges or the Pixie Bloom.
 
 ## Project layout
 ```
@@ -58,7 +66,7 @@ scenes/player/   Player (movement, dust & flight) and FairyArt (code-drawn Wren)
 scenes/entities/ Pickups, enemies, hazards, platforms, checkpoint, goal, signs
 scenes/level/    Level builder, TileRenderer, parallax Backdrop, Autopilot (dev tool)
 scenes/ui/       Title, HUD, pause menu, victory screen
-levels/          level_1.tres … level_9.tres (plain-text layouts)
+levels/          level_1.tres … level_10.tres (plain-text layouts)
 ui/              Global UI theme
 ```
 
@@ -74,6 +82,8 @@ o  pixie dust       h  heart               *  pixie bloom (instant flight)
 ?  star block       T  spring              S  sign (text from `signs`, left to right)
 g  walking critter  f  flyer (up/down)     b  flyer (left/right)
 ^  thorns           M  moving platform (left/right)   V  moving platform (up/down)
+Q  the Evil Fairy Queen (where she guards)   R  her Magic Mirror (its stand sits on the floor below)
+|  left edge of the boss arena (the fight starts and the camera locks when Wren walks past it)
 ```
 Handy physics numbers: a jump clears **3 tiles up** and about **5 across**, or roughly 9 across with a glide.
 A spring launches about 7 tiles up. For an `M` platform, leave a 7-tile gap centred on the `M`.
@@ -81,7 +91,8 @@ For a `V` platform, leave a 3-tile gap.
 
 To add a level, create a new `.tres` from an existing one and append its path to `LEVELS` in `autoload/game.gd`.
 The `theme` field picks the art style, enemies and music: `meadow`, `woods`, `beach`, `caves`, `peaks`, `orchard`,
-`candy`, `falls` or `sky`.
+`candy`, `falls`, `sky` or `castle`.
+A level with a `Q` and an `R` becomes a boss level (see `scenes/level/boss_fight.gd`).
 The title screen's level menu is built from `LEVELS`, so new levels show up there automatically.
 
 ## Developer shortcuts
@@ -93,8 +104,9 @@ godot --path . -- --level 1 --fly          # ...already flying
 godot --headless --path . --fixed-fps 60 -- --level 2 --autoplay --quit-when-done
                                            # a bot plays the level and reports if it finished
 ```
-All nine levels pass the autoplay check. The bot prints the column of any knockout, which helps when tuning a level.
-Level 2 occasionally gets one knockout because its critters start at random positions.
+All ten levels pass the autoplay check. The bot prints the column of any knockout, which helps when tuning a level.
+Level 2 occasionally gets one knockout because its critters start at random positions, and the bot usually takes one
+knockout in the boss fight before it wins (it can only walk right and jump, so it can't dodge her magic).
 
 ### Debug console
 In debug builds (running from the editor or a debug export), press **~** (the key left of 1) to open the console.
@@ -111,6 +123,7 @@ Type `help` to see every command. Up/Down scroll through history, Tab completes 
 | `dust <n>`, `hearts [n]` (`heal`) | Give pixie dust, or set hearts (full if no number) |
 | `goto <column>` (`tp`) | Teleport to a tile column in the current level |
 | `kill` | Knock Wren out (she respawns at the last lantern) |
+| `crack` | Crack the Magic Mirror once (boss level) |
 | `unlock <count\|all>` | Set how many levels are unlocked (saved) |
 | `speed <x>`, `mute`, `fps` | Game speed (0.25 to 4), mute all sound, frames-per-second readout |
 | `clear`, `close` | Clear or close the console |
@@ -119,7 +132,9 @@ Active cheats (GOD, INFINITE FLIGHT, speed, FPS) are shown in the bottom-right c
 Commands can also run at startup, separated by `;`:
 ```
 godot --path . -- --console "god on; infiniteflight on; level 5 120"
+godot --path . -- --level 10 --column 40 --console "god on; wait 4; crack; wait 3; crack; wait 3; crack"
 ```
+`wait <seconds>` only works in these startup scripts. It's handy for checking the boss ending.
 
 ## Code conventions
 - Every declaration is statically typed. `debug/gdscript/warnings/untyped_declaration` is set to **Error**, so untyped

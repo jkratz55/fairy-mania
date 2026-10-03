@@ -2,6 +2,10 @@ class_name Level
 extends Node2D
 ## Builds a level from a LevelData text layout, then runs it:
 ## spawning, checkpoints, gentle respawns (no game over) and the goal.
+## A layout with a Queen (Q) and her Magic Mirror (R) becomes a boss level run by a BossFight.
+
+## Emitted after Wren has been put back at the last checkpoint.
+signal respawned
 
 const TILE: int = 32
 const HALF_TILE: int = 16
@@ -33,6 +37,10 @@ var respawn_point: Vector2 = Vector2.ZERO
 
 var _finished: bool = false
 var _respawning: bool = false
+var _queen: FairyQueen
+var _mirror: MagicMirror
+## Left edge of the boss arena in pixels (from the `|` marker), or -1.
+var _arena_left: float = -1.0
 
 @onready var backdrop: Backdrop = $Backdrop
 @onready var terrain: StaticBody2D = $Terrain
@@ -53,6 +61,7 @@ func _ready() -> void:
 	_build_collision()
 	var start: Vector2 = _spawn_entities()
 	_spawn_player(start)
+	_start_boss_fight()
 	hud.bind_player(player)
 	hud.show_level_title("Level %d" % (Game.current_level + 1), data.title, data.subtitle)
 	Audio.play_music(data.music)
@@ -169,6 +178,15 @@ func _spawn_entities() -> Vector2:
 				"G":
 					var goal := _spawn(GOAL_SCENE, center) as Goal
 					goal.reached.connect(_on_goal_reached)
+				"Q":
+					_queen = FairyQueen.new()
+					_add_entity(_queen, center)
+				"R":
+					# The mirror's stand rests on the floor below its cell.
+					_mirror = MagicMirror.new()
+					_add_entity(_mirror, center + Vector2(0.0, HALF_TILE))
+				"|":
+					_arena_left = float(x * TILE)
 				"S":
 					var hint := SIGN_SCENE.instantiate() as HintSign
 					hint.text = data.signs[sign_index] if sign_index < data.signs.size() else "..."
@@ -216,6 +234,17 @@ func _spawn_player(start: Vector2) -> void:
 		add_child(autopilot)
 
 
+func _start_boss_fight() -> void:
+	if _queen == null or _mirror == null:
+		return
+	var fight := BossFight.new()
+	fight.level = self
+	fight.queen = _queen
+	fight.mirror = _mirror
+	fight.arena_left = _arena_left if _arena_left >= 0.0 else maxf(_mirror.global_position.x - 20.0 * TILE, 0.0)
+	add_child(fight)
+
+
 func is_finished() -> bool:
 	return _finished
 
@@ -251,9 +280,15 @@ func _on_player_knocked_out() -> void:
 		node.call("restore")
 	player.respawn(respawn_point)
 	_respawning = false
+	respawned.emit()
 
 
 func _on_goal_reached() -> void:
+	complete()
+
+
+## Wren celebrates, then the game moves on to the next level (or the victory screen).
+func complete(headline: String = "Level Complete!", detail: String = "") -> void:
 	if _finished or player.is_knocked_out():
 		return
 	_finished = true
@@ -261,6 +296,6 @@ func _on_goal_reached() -> void:
 	player.celebrate()
 	Audio.stop_music()
 	Audio.sfx("goal")
-	hud.show_level_complete(player.dust_total, Game.current_level + 1 >= Game.level_count())
-	await get_tree().create_timer(3.5).timeout
+	hud.show_level_complete(player.dust_total, Game.current_level + 1 >= Game.level_count(), headline, detail)
+	await get_tree().create_timer(3.5 if detail.is_empty() else 5.0).timeout
 	Game.complete_level(player.dust_total)

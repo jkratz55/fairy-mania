@@ -44,7 +44,7 @@ horizontal_alignment = 1
 [node name="Story" type="Label" parent="Content"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
-text = "Wren made it all the way to the Starlight Castle!"
+text = "Wren broke the Magic Mirror and saved the fairy world!"
 horizontal_alignment = 1
 
 [node name="Stats" type="Label" parent="."]

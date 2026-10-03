@@ -3,7 +3,7 @@ extends Area2D
 ## A springy pad. Step or land on it to bounce extra high!
 ## Looks like a flower (meadow), a glowing mushroom (woods), a clam shell (beach),
 ## a crystal pad (caves), a snow cushion (peaks), a pumpkin (orchard), a marshmallow (candy),
-## a water bubble (falls) or a star spring (sky).
+## a water bubble (falls), a velvet cushion (castle) or a star spring (sky).
 
 const STRENGTH: float = -760.0
 
@@ -105,6 +105,18 @@ func _draw() -> void:
 			draw_colored_polygon(bubble, Color(0.6, 0.86, 1.0, 0.55))
 			draw_polyline(Shapes.closed(bubble), Color(0.85, 0.96, 1.0), 1.5, true)
 			draw_circle(bubble_center + Vector2(-5.0, -3.0 * squash), 2.5, Color(1.0, 1.0, 1.0, 0.85), true, -1.0, true)
+		"castle":
+			draw_polyline(coil, theme.accents[0].darkened(0.2), 2.5, true)
+			var velvet := Color(0.62, 0.2, 0.5)
+			var cushion: PackedVector2Array = Shapes.ellipse(pad + Vector2(0.0, -2.0), Vector2(15.0, 5.5 * squash + 2.0), 0.0, 20)
+			draw_colored_polygon(cushion, velvet)
+			draw_polyline(Shapes.closed(cushion), velvet.darkened(0.35), 1.2, true)
+			draw_colored_polygon(Shapes.ellipse(pad + Vector2(-4.0, -4.0 * squash), Vector2(5.0, 1.6), 0.0, 10), Color(1.0, 1.0, 1.0, 0.25))
+			for side: float in [-1.0, 1.0]:
+				var corner := pad + Vector2(side * 14.0, -1.0)
+				draw_line(corner, corner + Vector2(side * 2.0, 6.0), theme.accents[0], 1.5, true)
+				draw_circle(corner + Vector2(side * 2.0, 7.0), 2.0, theme.accents[0], true, -1.0, true)
+			draw_circle(pad + Vector2(0.0, -2.0), 1.8, theme.accents[0], true, -1.0, true)
 		"cloud":
 			draw_polyline(coil, Color(0.8, 0.8, 0.95), 2.5, true)
 			var star: PackedVector2Array = Shapes.star(pad + Vector2(0.0, -4.0), 11.0, 5.0)

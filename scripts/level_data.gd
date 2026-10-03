@@ -9,10 +9,12 @@ extends Resource
 ##   ?  star block (bump it)   T  bouncy spring         S  hint sign (text from `signs`, left to right)
 ##   g  walking enemy          f  flying enemy (up/down) b  flying enemy (left/right)
 ##   ^  thorns                 M  moving platform (left/right)   V  moving platform (up/down)
+##   Q  the Evil Fairy Queen   R  her Magic Mirror (placed where its stand touches the floor)
+##   |  left edge of the boss arena (the fight starts when Wren walks past it)
 
 @export var title: String = "New Level"
 @export var subtitle: String = ""
-@export_enum("meadow", "woods", "beach", "caves", "peaks", "orchard", "candy", "falls", "sky") var theme: String = "meadow"
+@export_enum("meadow", "woods", "beach", "caves", "peaks", "orchard", "candy", "falls", "sky", "castle") var theme: String = "meadow"
 @export var music: String = "meadow"
 @export var signs: PackedStringArray = PackedStringArray()
 @export_multiline var layout: String = ""

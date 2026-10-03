@@ -9,6 +9,14 @@ var _bar_back_style: StyleBoxFlat
 var _bar_fill_style: StyleBoxFlat
 var _message_tween: Tween
 var _title_tween: Tween
+var _dialogue_tween: Tween
+var _dialogue: PanelContainer
+var _dialogue_name: Label
+var _dialogue_text: Label
+## Boss health shown as a row of pips (0 total hides the bar).
+var _boss_title: String = ""
+var _boss_total: int = 0
+var _boss_left: int = 0
 
 @onready var overlay: Control = $Overlay
 @onready var dust_label: Label = $Overlay/DustLabel
@@ -30,6 +38,7 @@ func _ready() -> void:
 	sub_message.modulate.a = 0.0
 	title_card.modulate.a = 0.0
 	fly_label.visible = false
+	_build_dialogue_box()
 
 
 func bind_player(player: Player) -> void:
@@ -77,12 +86,74 @@ func _hide_title_card() -> void:
 		_title_tween.tween_property(title_card, "modulate:a", 0.0, 0.2)
 
 
-func show_level_complete(dust: int, final_level: bool) -> void:
-	show_message("Level Complete!", 10.0)
+func show_level_complete(dust: int, final_level: bool, headline: String = "Level Complete!", detail: String = "") -> void:
+	show_message(headline, 10.0)
 	sub_message.text = "You collected %d pixie dust!%s" % [dust, "" if final_level else "\nOn to the next adventure..."]
+	if not detail.is_empty():
+		sub_message.text = detail + "\n" + sub_message.text
 	var tween := create_tween()
 	tween.tween_interval(0.5)
 	tween.tween_property(sub_message, "modulate:a", 1.0, 0.4)
+
+
+## A speech box at the bottom of the screen, e.g. the Queen talking.
+func show_dialogue(speaker: String, text: String, duration: float = 3.0) -> void:
+	_dialogue_name.text = speaker
+	_dialogue_text.text = text
+	if _dialogue_tween != null:
+		_dialogue_tween.kill()
+	_dialogue_tween = create_tween()
+	_dialogue_tween.tween_property(_dialogue, "modulate:a", 1.0, 0.2)
+	_dialogue_tween.tween_interval(duration)
+	_dialogue_tween.tween_property(_dialogue, "modulate:a", 0.0, 0.4)
+
+
+func show_boss_bar(title: String, total: int, left: int) -> void:
+	_boss_title = title
+	_boss_total = total
+	_boss_left = left
+
+
+func set_boss_bar(left: int) -> void:
+	_boss_left = left
+
+
+func hide_boss_bar() -> void:
+	_boss_total = 0
+
+
+func _build_dialogue_box() -> void:
+	_dialogue = PanelContainer.new()
+	# Sits at the top (under the boss bar) so it never hides the floor Wren is running on.
+	_dialogue.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	_dialogue.offset_left = -190.0
+	_dialogue.offset_right = 190.0
+	_dialogue.offset_top = 50.0
+	_dialogue.offset_bottom = 96.0
+	_dialogue.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	_dialogue.grow_vertical = Control.GROW_DIRECTION_END
+	_dialogue.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var style := _rounded(Color(0.16, 0.07, 0.24, 0.82), 12)
+	style.border_color = Color(0.85, 0.5, 1.0)
+	style.set_border_width_all(2)
+	style.content_margin_left = 14.0
+	style.content_margin_right = 14.0
+	style.content_margin_top = 6.0
+	style.content_margin_bottom = 8.0
+	_dialogue.add_theme_stylebox_override("panel", style)
+	_dialogue.modulate.a = 0.0
+	add_child(_dialogue)
+	var column := VBoxContainer.new()
+	column.add_theme_constant_override("separation", 0)
+	_dialogue.add_child(column)
+	_dialogue_name = Label.new()
+	_dialogue_name.add_theme_font_size_override("font_size", 11)
+	_dialogue_name.add_theme_color_override("font_color", Color(0.95, 0.65, 1.0))
+	column.add_child(_dialogue_name)
+	_dialogue_text = Label.new()
+	_dialogue_text.add_theme_font_size_override("font_size", 12)
+	_dialogue_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	column.add_child(_dialogue_text)
 
 
 func _rounded(color: Color, radius: int) -> StyleBoxFlat:
@@ -128,7 +199,28 @@ func _draw_overlay() -> void:
 			var x: float = bar.position.x + bar.size.x * float(i) / float(Player.DUST_FOR_FLIGHT)
 			overlay.draw_line(Vector2(x, bar.position.y + 3.0), Vector2(x, bar.end.y - 3.0), Color(1.0, 1.0, 1.0, 0.3), 1.0)
 
+	if _boss_total > 0:
+		_draw_boss_bar()
+
 	# Dust counter icon (top right).
 	var icon := Vector2(overlay.size.x - 96.0, 24.0)
 	overlay.draw_colored_polygon(Shapes.star(icon, 10.0, 3.5, 4, _time), Color(1.0, 0.88, 0.35))
 	overlay.draw_colored_polygon(Shapes.star(icon, 5.0, 1.8, 4, _time), Color(1.0, 1.0, 0.92))
+
+
+## The Magic Mirror's strength: one little mirror per hit left, cracked ones drawn broken.
+func _draw_boss_bar() -> void:
+	var width: float = 64.0 + 30.0 * float(_boss_total)
+	var panel := Rect2(overlay.size.x * 0.5 - width * 0.5, 8.0, width, 36.0)
+	overlay.draw_style_box(_panel_style, panel)
+	var font: Font = overlay.get_theme_default_font()
+	overlay.draw_string(font, Vector2(panel.position.x, panel.position.y + 13.0), _boss_title, HORIZONTAL_ALIGNMENT_CENTER, panel.size.x, 11, Color(0.95, 0.8, 1.0))
+	for i: int in _boss_total:
+		var center := Vector2(panel.get_center().x + (float(i) - float(_boss_total - 1) * 0.5) * 26.0, panel.position.y + 25.0)
+		var whole: bool = i < _boss_left
+		overlay.draw_colored_polygon(Shapes.ellipse(center, Vector2(7.0, 8.5)), Color(1.0, 0.8, 0.38) if whole else Color(0.6, 0.5, 0.45, 0.6))
+		overlay.draw_colored_polygon(Shapes.ellipse(center, Vector2(4.8, 6.3)), Color(0.75, 0.4, 1.0) if whole else Color(0.15, 0.1, 0.2))
+		if whole:
+			overlay.draw_circle(center + Vector2(-1.5, -2.5), 1.4, Color(1.0, 1.0, 1.0, 0.7), true, -1.0, true)
+		else:
+			overlay.draw_polyline(PackedVector2Array([center + Vector2(-4.0, -5.0), center + Vector2(1.0, -1.0), center + Vector2(-1.0, 2.0), center + Vector2(4.0, 5.0)]), Color(1.0, 1.0, 1.0, 0.8), 1.2, true)

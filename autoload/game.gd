@@ -11,6 +11,7 @@ const LEVELS: Array[String] = [
 	"res://levels/level_7.tres",
 	"res://levels/level_8.tres",
 	"res://levels/level_9.tres",
+	"res://levels/level_10.tres",
 ]
 const LEVEL_SCENE: String = "res://scenes/level/level.tscn"
 const TITLE_SCENE: String = "res://scenes/ui/title_screen.tscn"

@@ -80,7 +80,14 @@ func _draw_earth(ci: CanvasItem, x: int, y: int) -> void:
 	if depth > 0:
 		ci.draw_rect(Rect2(px, py, TILE, TILE), Color(t.fill_dark, 0.22 * float(depth)))
 
-	for i: int in 3:
+	if t.style == "castle":
+		# Stone blocks: a mortar line across the middle and staggered joints.
+		var mortar := Color(t.speck, 0.9)
+		ci.draw_line(Vector2(px, py + 16.0), Vector2(px + TILE, py + 16.0), mortar, 1.5)
+		var joint: float = px + (8.0 if y % 2 == 0 else 24.0)
+		ci.draw_line(Vector2(joint, py + (13.0 if top_open else 0.0)), Vector2(joint, py + 16.0), mortar, 1.5)
+		ci.draw_line(Vector2(joint + (16.0 if joint < px + 16.0 else -16.0), py + 16.0), Vector2(joint + (16.0 if joint < px + 16.0 else -16.0), py + TILE), mortar, 1.5)
+	for i: int in (0 if t.style == "castle" else 3):
 		var speck := Vector2(px + 4.0 + Shapes.hash01(x, y, i) * 24.0, py + 4.0 + Shapes.hash01(x, y, i + 7) * 24.0)
 		if top_open and speck.y < py + 15.0:
 			continue
@@ -169,6 +176,11 @@ func _draw_earth(ci: CanvasItem, x: int, y: int) -> void:
 			ci.draw_rect(Rect2(px, py + 13.0, TILE, 2.0), t.top_dark)
 			if Shapes.hash01(x, y, 21) < 0.4:
 				ci.draw_colored_polygon(Shapes.star(Vector2(px + 6.0 + Shapes.hash01(x, y, 22) * 20.0, py + 6.0), 2.5, 0.8, 4), Color(t.platform, 0.9))
+		elif t.style == "castle":
+			# A gold trim along polished stone.
+			ci.draw_line(Vector2(px, py + 10.5), Vector2(px + TILE, py + 10.5), t.accents[0], 1.5)
+			if x % 4 == 0:
+				ci.draw_colored_polygon(Shapes.star(Vector2(px + 16.0, py + 5.0), 2.5, 1.0, 4), Color(t.accents[0], 0.7))
 		elif t.style == "leaf":
 			# Fallen leaves scattered on the path.
 			for i: int in 3:
@@ -325,6 +337,12 @@ func _draw_platform(ci: CanvasItem, x: int, y: int) -> void:
 			ci.draw_line(Vector2(x0, py + 0.5), Vector2(x1, py + 0.5), Color(1.0, 1.0, 1.0, 0.6), 1.0)
 			if Shapes.hash01(x, y, 1) < 0.4:
 				ci.draw_colored_polygon(Shapes.star(Vector2(px + 8.0 + Shapes.hash01(x, y, 2) * 16.0, py - 3.0), 2.5, 0.8, 4), Color(1.0, 1.0, 1.0, 0.9))
+		"castle":
+			# A stone balcony ledge with gold trim and a little bracket underneath.
+			ci.draw_rect(Rect2(x0, py, x1 - x0, 9.0), t.platform)
+			ci.draw_rect(Rect2(x0, py + 7.0, x1 - x0, 2.0), t.platform_dark)
+			ci.draw_line(Vector2(x0, py + 1.0), Vector2(x1, py + 1.0), t.accents[0], 1.5)
+			ci.draw_colored_polygon(PackedVector2Array([Vector2(px + 11.0, py + 9.0), Vector2(px + 21.0, py + 9.0), Vector2(px + 16.0, py + 16.0)]), t.platform_dark)
 		"cloud":
 			# Golden star-bridge.
 			ci.draw_rect(Rect2(x0, py + 1.0, x1 - x0, 9.0), t.platform)
@@ -461,6 +479,15 @@ func _draw_decor(ci: CanvasItem, x: int, y: int) -> void:
 				for k: int in 3:
 					var a: float = TAU * float(k) / 3.0
 					ci.draw_colored_polygon(PackedVector2Array([base + Vector2(0.0, -3.5), base + Vector2(0.0, -3.5) + Vector2.from_angle(a) * 4.0, base + Vector2(0.0, -3.5) + Vector2.from_angle(a + 0.9) * 4.0]), Color(0.95, 0.3, 0.4))
+		"castle":
+			if roll < 0.1:
+				# A candle on a gold holder.
+				ci.draw_rect(Rect2(base.x - 4.0, base.y - 2.0, 8.0, 2.0), t.accents[0])
+				ci.draw_rect(Rect2(base.x - 1.5, base.y - 10.0, 3.0, 8.0), Color(0.98, 0.95, 0.88))
+				ci.draw_circle(base + Vector2(0.0, -13.0), 4.0, Color(1.0, 0.8, 0.4, 0.25), true, -1.0, true)
+				ci.draw_colored_polygon(Shapes.ellipse(base + Vector2(0.0, -12.5), Vector2(1.4, 2.6), 0.0, 8), Color(1.0, 0.85, 0.4))
+			elif roll < 0.18:
+				ci.draw_colored_polygon(Shapes.star(base + Vector2(0.0, -4.0), 4.0, 1.4, 4), Color(accent, 0.85))
 		"falls":
 			if roll < 0.12:
 				# A fern.
@@ -510,6 +537,8 @@ func _draw_pits(ci: CanvasItem, first_column: int, last_column: int) -> void:
 				_draw_fade(ci, Rect2(px, pool - 60.0, TILE, 60.0), Color(1.0, 1.0, 1.0, 0.35))
 			"frosting":
 				_draw_fade(ci, Rect2(px, bottom - 130.0, TILE, 130.0), Color(0.42, 0.22, 0.4))
+			"castle":
+				_draw_fade(ci, Rect2(px, bottom - 130.0, TILE, 130.0), Color(0.05, 0.02, 0.1))
 			"snow":
 				_draw_fade(ci, Rect2(px, bottom - 150.0, TILE, 150.0), Color(0.22, 0.27, 0.52))
 			"crystal":

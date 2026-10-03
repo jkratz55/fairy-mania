@@ -61,6 +61,10 @@ func setup(theme: LevelTheme, drift: bool = false) -> void:
 			_add_layer("falls_clouds", 0.12, theme, drift, false, -6.0)
 			_add_layer("falls_mid", 0.25, theme, drift, true)
 			_add_layer("falls_near", 0.5, theme, drift, true)
+		"castle":
+			_add_layer("castle_far", 0.1, theme, drift, true)
+			_add_layer("castle_mid", 0.3, theme, drift)
+			_add_layer("castle_near", 0.55, theme, drift, true)
 		"sky":
 			_add_layer("sky_far", 0.05, theme, drift, true)
 			_add_layer("sky_banks", 0.15, theme, drift)
@@ -564,6 +568,56 @@ static func draw_layer(ci: CanvasItem, kind: String, theme: LevelTheme, time: fl
 					rise += 300.0
 				var sparkle: float = 0.5 + 0.5 * sin(time * 2.0 + float(i) * 1.7)
 				ci.draw_circle(Vector2(start.x + sin(time + float(i)) * 10.0, rise), 1.6, Color(1.0, 1.0, 1.0, 0.3 + 0.5 * sparkle), true, -1.0, true)
+		"castle_far":
+			# The great hall's back wall, with tall arched windows onto the night sky.
+			var wall := Color(0.2, 0.15, 0.32)
+			ci.draw_rect(Rect2(0.0, -400.0, STRIP_WIDTH, 1300.0), wall)
+			for i: int in 4:
+				var wx: float = 128.0 + 256.0 * float(i)
+				var window := Rect2(wx - 44.0, 40.0, 88.0, 170.0)
+				ci.draw_colored_polygon(Shapes.dome(Vector2(wx, window.position.y + 2.0), Vector2(48.0, 48.0)), Color(0.32, 0.25, 0.46))
+				ci.draw_rect(window.grow(4.0), Color(0.32, 0.25, 0.46))
+				ci.draw_colored_polygon(Shapes.dome(Vector2(wx, window.position.y + 2.0), Vector2(44.0, 44.0)), Color(0.12, 0.12, 0.34))
+				ci.draw_rect(window, Color(0.12, 0.12, 0.34))
+				for s: int in 7:
+					var star := Vector2(wx - 36.0 + Shapes.hash01(i, s, 71) * 72.0, 10.0 + Shapes.hash01(i, s, 72) * 190.0)
+					var twinkle: float = 0.5 + 0.5 * sin(time * (1.5 + Shapes.hash01(i, s, 73) * 2.0) + float(s))
+					ci.draw_circle(star, 1.2, Color(1.0, 1.0, 0.9, 0.3 + 0.7 * twinkle), true, -1.0, true)
+				if i == 1:
+					ci.draw_circle(Vector2(wx + 10.0, 70.0), 16.0, Color(1.0, 0.95, 0.8), true, -1.0, true)
+					ci.draw_circle(Vector2(wx + 17.0, 64.0), 14.0, Color(0.12, 0.12, 0.34), true, -1.0, true)
+				# Window frame and panes.
+				ci.draw_line(Vector2(wx, window.position.y - 40.0), Vector2(wx, window.end.y), Color(0.32, 0.25, 0.46), 4.0)
+				ci.draw_line(Vector2(window.position.x, 120.0), Vector2(window.end.x, 120.0), Color(0.32, 0.25, 0.46), 4.0)
+			ci.draw_rect(Rect2(0.0, 230.0, STRIP_WIDTH, 700.0), wall.darkened(0.15))
+		"castle_mid":
+			var stone := Color(0.27, 0.21, 0.4)
+			for i: int in 4:
+				var px: float = 64.0 + 256.0 * float(i)
+				ci.draw_rect(Rect2(px - 22.0, -400.0, 44.0, 1300.0), stone)
+				ci.draw_rect(Rect2(px - 28.0, 230.0, 56.0, 10.0), stone.lightened(0.1))
+				ci.draw_rect(Rect2(px - 3.0, -400.0, 6.0, 1300.0), Color(1.0, 1.0, 1.0, 0.05))
+				# A royal banner with a gold crescent moon.
+				var bx: float = px + 128.0
+				var banner := PackedVector2Array([Vector2(bx - 20.0, 30.0), Vector2(bx + 20.0, 30.0), Vector2(bx + 20.0, 150.0), Vector2(bx, 135.0), Vector2(bx - 20.0, 150.0)])
+				ci.draw_rect(Rect2(bx - 26.0, 26.0, 52.0, 5.0), theme.accents[0].darkened(0.3))
+				ci.draw_colored_polygon(banner, Color(0.45, 0.18, 0.5))
+				ci.draw_polyline(Shapes.closed(banner), theme.accents[0].darkened(0.2), 2.0, true)
+				ci.draw_circle(Vector2(bx, 80.0), 11.0, theme.accents[0], true, -1.0, true)
+				ci.draw_circle(Vector2(bx + 5.0, 76.0), 10.0, Color(0.45, 0.18, 0.5), true, -1.0, true)
+			ci.draw_rect(Rect2(0.0, 262.0, STRIP_WIDTH, 700.0), Color(0.18, 0.13, 0.27))
+		"castle_near":
+			# Drifting motes of the Queen's magic.
+			for i: int in 24:
+				var start := Vector2(Shapes.hash01(i, 75, 1) * STRIP_WIDTH, Shapes.hash01(i, 75, 2) * 300.0)
+				var rise: float = fmod(start.y - time * (10.0 + Shapes.hash01(i, 75, 3) * 12.0), 300.0)
+				if rise < 0.0:
+					rise += 300.0
+				var mote := Vector2(start.x + sin(time * 0.8 + float(i)) * 14.0, 10.0 + rise)
+				var glow: Color = theme.accents[1 + i % 3]
+				var flicker: float = 0.5 + 0.5 * sin(time * 2.0 + float(i) * 1.7)
+				ci.draw_circle(mote, 5.0, Color(glow, 0.1 * flicker), true, -1.0, true)
+				ci.draw_circle(mote, 1.4, Color(glow, 0.35 + 0.5 * flicker), true, -1.0, true)
 		"sky_far":
 			for i: int in 80:
 				var star_pos := Vector2(Shapes.hash01(i, 7, 1) * STRIP_WIDTH, Shapes.hash01(i, 7, 2) * 230.0)

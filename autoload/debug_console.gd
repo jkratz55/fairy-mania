@@ -3,6 +3,7 @@ extends CanvasLayer
 ## The game pauses while it is open. It only exists in debug builds (the editor and debug exports),
 ## so players of a release build can never open it by accident.
 ## Commands can also run at startup: `godot --path . -- --console "god on; level 3 40"`.
+## In a startup script, `wait <seconds>` pauses before the next command.
 
 const MAX_LINES: int = 300
 const MAX_HISTORY: int = 50
@@ -151,6 +152,8 @@ func _register_commands() -> void:
 	_add("hearts", "hearts [amount]", "Set Wren's hearts (full if no amount).", _cmd_hearts, ["heal"])
 	_add("goto", "goto <column>", "Teleport to a tile column in this level.", _cmd_goto, ["tp"])
 	_add("kill", "kill", "Knock Wren out (respawns at the last lantern).", _cmd_kill)
+	_add("crack", "crack", "Crack the Magic Mirror once (in the boss level).", _cmd_crack)
+	_add("wait", "wait <seconds>", "Pause a --console startup script before the next command.", _cmd_wait)
 	_add("unlock", "unlock <count|all>", "Set how many levels are unlocked (saved).", _cmd_unlock)
 	_add("speed", "speed <multiplier>", "Change the game speed (1 is normal, 0.25 to 4).", _cmd_speed)
 	_add("mute", "mute [on|off]", "Toggle all sound.", _cmd_mute)
@@ -318,6 +321,22 @@ func _cmd_kill(_args: PackedStringArray) -> void:
 	_ok("Oops!")
 
 
+func _cmd_crack(_args: PackedStringArray) -> void:
+	var mirror := get_tree().get_first_node_in_group("magic_mirror") as MagicMirror
+	if mirror == null:
+		_error("There is no Magic Mirror here (try: level %d)." % Game.level_count())
+		return
+	if mirror.is_broken():
+		_error("The mirror is already broken.")
+		return
+	mirror.crack()
+	_ok("Crack! (%d of %d)" % [mirror.hits, MagicMirror.HITS_TO_BREAK])
+
+
+func _cmd_wait(_args: PackedStringArray) -> void:
+	_error("wait only works in --console startup scripts.")
+
+
 func _cmd_unlock(args: PackedStringArray) -> void:
 	if args.is_empty():
 		_error("Usage: unlock <count|all>")
@@ -432,6 +451,10 @@ func _run_startup_commands() -> void:
 		await get_tree().process_frame
 	for line: String in args[index + 1].split(";", false):
 		_echo(line.strip_edges())
+		var words: PackedStringArray = line.strip_edges().split(" ", false)
+		if words.size() == 2 and words[0] == "wait" and words[1].is_valid_float():
+			await get_tree().create_timer(words[1].to_float(), true, false, true).timeout
+			continue
 		execute(line)
 
 
