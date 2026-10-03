@@ -26,6 +26,10 @@ var session_dust: int = 0
 var debug_start_column: int = -1
 ## Debug helper: start the next level already flying (set with `-- --fly`).
 var debug_start_flying: bool = false
+## Debug cheat (console `god`): Wren takes no damage and floats back up out of pits.
+var debug_invincible: bool = false
+## Debug cheat (console `infiniteflight`): flight never runs out.
+var debug_infinite_flight: bool = false
 
 var _fade_rect: ColorRect
 var _transitioning: bool = false
@@ -54,6 +58,12 @@ func level_count() -> int:
 
 func is_level_unlocked(index: int) -> bool:
 	return index < unlocked_levels
+
+
+## Sets how many levels are unlocked and saves it (used by the debug console).
+func unlock_levels(count: int) -> void:
+	unlocked_levels = clampi(count, 1, LEVELS.size())
+	_save_progress()
 
 
 func start_level(index: int) -> void:

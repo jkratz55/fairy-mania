@@ -194,7 +194,7 @@ func _spawn_player(start: Vector2) -> void:
 	player = PLAYER_SCENE.instantiate() as Player
 	player.position = start
 	if Game.debug_start_column >= 0:
-		player.position = _debug_start_position(Game.debug_start_column)
+		player.position = standing_position(Game.debug_start_column)
 		Game.debug_start_column = -1
 	player.level_bounds = Rect2(0.0, 0.0, float(columns * TILE), float(rows * TILE))
 	entities.add_child(player)
@@ -220,7 +220,8 @@ func is_finished() -> bool:
 	return _finished
 
 
-func _debug_start_position(column: int) -> Vector2:
+## Where Wren would stand on the highest floor in a column (debug spawns and the console's `goto`).
+func standing_position(column: int) -> Vector2:
 	var x: int = clampi(column, 0, columns - 1)
 	for y: int in range(1, rows):
 		if grid[y][x] in ["#", "="] and grid[y - 1][x] not in ["#", "="]:

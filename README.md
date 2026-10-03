@@ -96,6 +96,31 @@ godot --headless --path . --fixed-fps 60 -- --level 2 --autoplay --quit-when-don
 All nine levels pass the autoplay check. The bot prints the column of any knockout, which helps when tuning a level.
 Level 2 occasionally gets one knockout because its critters start at random positions.
 
+### Debug console
+In debug builds (running from the editor or a debug export), press **~** (the key left of 1) to open the console.
+The game pauses while it is open. Release exports don't include it, so players can't open it by accident.
+Type `help` to see every command. Up/Down scroll through history, Tab completes a command name, and ~ or Esc closes it.
+
+| Command | What it does |
+|---|---|
+| `levels` | List the levels and which ones are unlocked |
+| `level <n> [column]` (`warp`) | Warp to a level, optionally starting at a tile column |
+| `restart`, `next` (`skip`), `title` | Restart, finish the level and go on, or return to the title screen |
+| `god [on\|off]` | Invincibility: no damage, and falling into a pit floats Wren back up flying |
+| `fly`, `infiniteflight [on\|off]` | Take off now, or make flight never run out |
+| `dust <n>`, `hearts [n]` (`heal`) | Give pixie dust, or set hearts (full if no number) |
+| `goto <column>` (`tp`) | Teleport to a tile column in the current level |
+| `kill` | Knock Wren out (she respawns at the last lantern) |
+| `unlock <count\|all>` | Set how many levels are unlocked (saved) |
+| `speed <x>`, `mute`, `fps` | Game speed (0.25 to 4), mute all sound, frames-per-second readout |
+| `clear`, `close` | Clear or close the console |
+
+Active cheats (GOD, INFINITE FLIGHT, speed, FPS) are shown in the bottom-right corner while the console is closed.
+Commands can also run at startup, separated by `;`:
+```
+godot --path . -- --console "god on; infiniteflight on; level 5 120"
+```
+
 ## Code conventions
 - Every declaration is statically typed. `debug/gdscript/warnings/untyped_declaration` is set to **Error**, so untyped
   code will not run.

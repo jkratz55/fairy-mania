@@ -136,7 +136,7 @@ func _process_flight(delta: float, input_dir: float) -> void:
 			vertical = 1.0
 	velocity.y = move_toward(velocity.y, vertical * FLY_SPEED_Y, FLY_ACCEL * delta)
 	_gliding = false
-	if controls_enabled:
+	if controls_enabled and not Game.debug_infinite_flight:
 		flight_time_left -= delta
 		if flight_time_left <= 0.0:
 			end_flight()
@@ -173,7 +173,13 @@ func _keep_in_bounds() -> void:
 		global_position.y = level_bounds.position.y + 14.0
 		velocity.y = maxf(velocity.y, 0.0)
 	if global_position.y > level_bounds.end.y + 48.0:
-		knock_out()
+		if Game.debug_invincible:
+			# Debug safety net: pop back up and fly instead of being knocked out.
+			global_position.y = level_bounds.end.y - 64.0
+			fill_dust_meter()
+			velocity.y = -FLY_SPEED_Y * 2.0
+		else:
+			knock_out()
 
 
 func _update_visuals(delta: float, on_floor: bool) -> void:
@@ -271,7 +277,7 @@ func spring(strength: float) -> void:
 
 
 func hurt(from: Vector2) -> void:
-	if _knocked_out or _invulnerable_timer > 0.0 or not controls_enabled:
+	if _knocked_out or _invulnerable_timer > 0.0 or not controls_enabled or Game.debug_invincible:
 		return
 	hearts -= 1
 	if hearts <= 0:
