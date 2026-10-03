@@ -17,7 +17,13 @@ var _done: bool = false
 
 func _ready() -> void:
 	process_physics_priority = -100  # Decide input before the player reads it.
-	level.player.knocked_out.connect(func() -> void: _knockouts += 1)
+	level.player.knocked_out.connect(_on_knocked_out)
+
+
+func _on_knocked_out() -> void:
+	_knockouts += 1
+	var at: Vector2 = level.player.global_position / TILE
+	print("  knockout at column %d, row %d (t=%ds)" % [int(at.x), int(at.y), int(_elapsed)])
 
 
 func _physics_process(delta: float) -> void:

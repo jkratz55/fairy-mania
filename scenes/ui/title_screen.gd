@@ -3,6 +3,7 @@ extends Control
 
 var _time: float = 0.0
 var _fairy_home: Vector2
+var level_buttons: Array[Button] = []
 
 @onready var backdrop: Backdrop = $Backdrop
 @onready var fairy: FairyArt = $Fairy
@@ -12,7 +13,7 @@ var _fairy_home: Vector2
 @onready var levels_button: Button = %LevelsButton
 @onready var quit_button: Button = %QuitButton
 @onready var back_button: Button = %BackButton
-@onready var level_buttons: Array[Button] = [%Level1Button, %Level2Button, %Level3Button]
+@onready var level_grid: GridContainer = %LevelGrid
 
 
 func _ready() -> void:
@@ -29,8 +30,12 @@ func _ready() -> void:
 	quit_button.pressed.connect(func() -> void: get_tree().quit())
 	back_button.pressed.connect(_show_main_menu)
 	quit_button.visible = not OS.has_feature("web")
-	for i: int in level_buttons.size():
-		var button: Button = level_buttons[i]
+	for i: int in Game.level_count():
+		var button := Button.new()
+		button.add_theme_font_size_override("font_size", 13)
+		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		level_grid.add_child(button)
+		level_buttons.append(button)
 		var data := load(Game.LEVELS[i]) as LevelData
 		var unlocked: bool = Game.is_level_unlocked(i)
 		button.text = "%d. %s" % [i + 1, data.title] if unlocked else "%d. (locked)" % (i + 1)

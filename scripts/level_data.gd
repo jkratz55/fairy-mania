@@ -12,7 +12,7 @@ extends Resource
 
 @export var title: String = "New Level"
 @export var subtitle: String = ""
-@export_enum("meadow", "woods", "sky") var theme: String = "meadow"
+@export_enum("meadow", "woods", "beach", "caves", "peaks", "orchard", "candy", "falls", "sky") var theme: String = "meadow"
 @export var music: String = "meadow"
 @export var signs: PackedStringArray = PackedStringArray()
 @export_multiline var layout: String = ""

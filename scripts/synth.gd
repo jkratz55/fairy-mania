@@ -17,6 +17,24 @@ const MEADOW_BASS: String = "C3:1 G3:1 C3:1 G3:1 A2:1 E3:1 A2:1 E3:1 F2:1 C3:1 F
 const WOODS_LEAD: String = "A4:1 C5:0.5 E5:0.5 D5:1 C5:1 E5:1.5 D5:0.5 C5:1 A4:1 G4:1 B4:0.5 D5:0.5 C5:1 B4:1 A4:3 R:1 A4:1 C5:0.5 E5:0.5 A5:1 G5:1 E5:1.5 G5:0.5 E5:1 D5:1 C5:0.5 D5:0.5 E5:1 D5:0.5 C5:0.5 B4:1 A4:3 R:1"
 const WOODS_BASS: String = "A2:1 E3:1 A3:1 E3:1 F2:1 C3:1 F3:1 C3:1 G2:1 D3:1 G3:1 D3:1 A2:1 E3:1 A3:1 E3:1 A2:1 E3:1 A3:1 E3:1 C3:1 G3:1 C4:1 G3:1 G2:1 D3:1 G3:1 D3:1 A2:1 E3:1 A2:2"
 
+const BEACH_LEAD: String = "G4:0.5 B4:0.5 D5:1 B4:0.5 D5:0.5 E5:1 D5:0.5 B4:0.5 G4:1 A4:1 R:1 C5:0.5 E5:0.5 G5:1 E5:0.5 C5:0.5 D5:1 B4:0.5 G4:0.5 A4:1 B4:1 R:1 G4:0.5 B4:0.5 D5:1 G5:1 F#5:0.5 E5:0.5 D5:1 E5:0.5 F#5:0.5 G5:1 R:1 E5:0.5 D5:0.5 C5:0.5 B4:0.5 A4:1 C5:1 B4:0.5 A4:0.5 G4:3"
+const BEACH_BASS: String = "G2:1 D3:1 G2:1 D3:1 D3:1 A2:1 D3:1 F#3:1 C3:1 G2:1 C3:1 E3:1 G2:1 D3:1 D3:1 F#2:1 G2:1 B2:1 D3:1 B2:1 D3:1 A2:1 D3:1 A2:1 C3:1 G2:1 A2:1 D3:1 G2:1 D3:1 G2:2"
+
+const CAVES_LEAD: String = "D5:1 F5:1 A5:1.5 G5:0.5 F5:1 E5:1 D5:2 C5:1 E5:1 G5:1.5 F5:0.5 E5:1 C5:1 A4:2 Bb4:1 D5:1 F5:1 A5:1 G5:1.5 F5:0.5 E5:2 F5:1 E5:1 D5:1 C#5:1 D5:3 R:1"
+const CAVES_BASS: String = "D3:1 A3:1 D4:1 A3:1 D3:1 A3:1 D4:1 A3:1 C3:1 G3:1 C4:1 G3:1 A2:1 E3:1 A3:1 E3:1 Bb2:1 F3:1 Bb3:1 F3:1 C3:1 G3:1 C4:1 G3:1 A2:1 E3:1 A3:1 C#4:1 D3:1 A3:1 D3:2"
+
+const PEAKS_LEAD: String = "D5:0.5 F#5:0.5 A5:1 A5:0.5 B5:0.5 A5:1 F#5:0.5 D5:0.5 E5:1 F#5:1 R:1 G5:0.5 F#5:0.5 E5:1 B4:1 E5:0.5 F#5:0.5 G5:1 F#5:0.5 E5:0.5 A5:2 D5:0.5 F#5:0.5 A5:1 D6:1 C#6:0.5 B5:0.5 A5:1 G5:0.5 F#5:0.5 E5:1 R:1 G5:1 F#5:0.5 E5:0.5 A5:1 C#5:1 D5:3 R:1"
+const PEAKS_BASS: String = "D3:1 A3:1 D3:1 A3:1 A2:1 E3:1 A2:1 E3:1 E3:1 B3:1 E3:1 B3:1 A2:1 E3:1 A2:1 C#3:1 D3:1 A3:1 D3:1 A3:1 G2:1 D3:1 A2:1 E3:1 G2:1 D3:1 A2:1 E3:1 D3:1 A2:1 D3:2"
+
+const ORCHARD_LEAD: String = "C5:0.5 F5:0.5 A5:1 G5:0.5 F5:0.5 G5:1 A5:0.5 G5:0.5 F5:1 D5:1 R:1 Bb4:0.5 D5:0.5 F5:1 E5:0.5 D5:0.5 C5:1 A4:0.5 C5:0.5 F5:1 E5:1 R:1 C5:0.5 F5:0.5 A5:1 C6:1 Bb5:0.5 A5:0.5 G5:1 F5:0.5 G5:0.5 A5:1 R:1 Bb5:0.5 A5:0.5 G5:0.5 F5:0.5 E5:1 G5:1 F5:3 R:1"
+const ORCHARD_BASS: String = "F2:1 C3:1 F3:1 C3:1 Bb2:1 F3:1 D3:1 F3:1 C3:1 G3:1 E3:1 G3:1 F2:1 C3:1 A2:1 C3:1 F2:1 C3:1 F3:1 C3:1 Bb2:1 F3:1 C3:1 G3:1 F2:1 C3:1 C3:1 G3:1 C3:1 G2:1 F2:2"
+
+const CANDY_LEAD: String = "G5:0.5 E5:0.5 G5:0.5 E5:0.5 C6:1 G5:1 A5:0.5 G5:0.5 F5:0.5 E5:0.5 D5:1 R:1 F5:0.5 D5:0.5 F5:0.5 D5:0.5 B5:1 F5:1 G5:0.5 F5:0.5 E5:0.5 D5:0.5 C5:1 R:1 E5:0.5 G5:0.5 C6:0.5 E6:0.5 D6:1 C6:1 A5:0.5 C6:0.5 B5:0.5 A5:0.5 G5:1 R:1 F5:0.5 A5:0.5 G5:0.5 E5:0.5 D5:0.5 F5:0.5 E5:0.5 D5:0.5 C5:2 R:2"
+const CANDY_BASS: String = "C3:1 G3:1 C3:1 G3:1 F2:1 C3:1 G2:1 D3:1 G2:1 D3:1 G2:1 D3:1 C3:1 G3:1 C3:1 G3:1 C3:1 G3:1 E3:1 G3:1 A2:1 E3:1 G2:1 D3:1 F2:1 C3:1 G2:1 D3:1 C3:1 G2:1 C3:2"
+
+const FALLS_LEAD: String = "A4:1 D5:1 F#5:1.5 E5:0.5 D5:1 E5:1 F#5:2 G5:1 F#5:0.5 E5:0.5 D5:1 B4:1 C#5:1 D5:1 E5:2 A4:1 D5:1 F#5:1.5 A5:0.5 B5:1 A5:1 F#5:2 G5:1 F#5:0.5 E5:0.5 F#5:1 E5:1 D5:3 R:1"
+const FALLS_BASS: String = "D3:1 A3:1 F#3:1 A3:1 D3:1 A3:1 F#3:1 A3:1 G2:1 D3:1 B2:1 D3:1 A2:1 E3:1 C#3:1 E3:1 D3:1 A3:1 F#3:1 A3:1 B2:1 F#3:1 D3:1 F#3:1 G2:1 D3:1 A2:1 E3:1 D3:1 A2:1 D3:2"
+
 const SKY_LEAD: String = "F5:1 A5:1 C6:1 A5:1 G5:1 A5:0.5 G5:0.5 F5:1 D5:1 Bb4:1 D5:1 F5:1 D5:0.5 F5:0.5 E5:2 C5:2 F5:1 A5:1 C6:1 D6:1 C6:1 A5:0.5 F5:0.5 G5:2 Bb5:1 A5:1 G5:1 E5:1 F5:3 R:1"
 const SKY_BASS: String = "F2:1 C3:1 F3:1 C3:1 D2:1 A2:1 D3:1 A2:1 A#2:1 F3:1 A#2:1 F3:1 C3:1 G3:1 C3:1 G3:1 F2:1 C3:1 F3:1 C3:1 F2:1 C3:1 F3:1 C3:1 A#2:1 F3:1 C3:1 G3:1 F2:1 C3:1 F2:2"
 
@@ -25,6 +43,12 @@ const SONGS: Dictionary[String, Dictionary] = {
 	"title": {"bpm": 84.0, "lead": MEADOW_LEAD, "bass": MEADOW_BASS, "lead_wave": Wave.SINE, "lead_octave": 12, "drums": false},
 	"meadow": {"bpm": 112.0, "lead": MEADOW_LEAD, "bass": MEADOW_BASS, "lead_wave": Wave.SQUARE, "lead_octave": 0, "drums": true},
 	"woods": {"bpm": 94.0, "lead": WOODS_LEAD, "bass": WOODS_BASS, "lead_wave": Wave.TRIANGLE, "lead_octave": 0, "drums": true},
+	"beach": {"bpm": 120.0, "lead": BEACH_LEAD, "bass": BEACH_BASS, "lead_wave": Wave.TRIANGLE, "lead_octave": 0, "drums": true},
+	"caves": {"bpm": 84.0, "lead": CAVES_LEAD, "bass": CAVES_BASS, "lead_wave": Wave.SINE, "lead_octave": 0, "drums": true},
+	"peaks": {"bpm": 128.0, "lead": PEAKS_LEAD, "bass": PEAKS_BASS, "lead_wave": Wave.SQUARE, "lead_octave": 0, "drums": true},
+	"orchard": {"bpm": 108.0, "lead": ORCHARD_LEAD, "bass": ORCHARD_BASS, "lead_wave": Wave.TRIANGLE, "lead_octave": 0, "drums": true},
+	"candy": {"bpm": 132.0, "lead": CANDY_LEAD, "bass": CANDY_BASS, "lead_wave": Wave.SQUARE, "lead_octave": 0, "drums": true},
+	"falls": {"bpm": 96.0, "lead": FALLS_LEAD, "bass": FALLS_BASS, "lead_wave": Wave.SINE, "lead_octave": 0, "drums": true},
 	"sky": {"bpm": 100.0, "lead": SKY_LEAD, "bass": SKY_BASS, "lead_wave": Wave.SINE, "lead_octave": 0, "drums": true},
 }
 

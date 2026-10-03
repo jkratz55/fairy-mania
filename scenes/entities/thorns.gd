@@ -1,6 +1,7 @@
 class_name Thorns
 extends Area2D
-## Prickly thorns (brambles, glow-thorns or storm crystals depending on the theme). Ouch!
+## Prickly thorns (brambles, glow-thorns, sea urchins, rose crystals, icicles, chestnut burrs,
+## candy-corn spikes, thistles or storm crystals depending on the theme). Ouch!
 
 var theme: LevelTheme
 

@@ -1,7 +1,7 @@
 # Fairy Mania ✨
 
 A cozy 2D side-scrolling platformer for kids aged 6–10, built with **Godot 4.7** and statically typed GDScript.
-Help **Wren** the fairy hop, glide and fly through three worlds to reach the Starlight Castle.
+Help **Wren** the fairy hop, glide and fly through nine worlds to reach the Starlight Castle.
 
 Everything is original: all art is drawn in code with `_draw()`, and all sound effects and music are synthesized
 at runtime. There are no imported image or audio files, so there's nothing borrowed from Disney or anyone else.
@@ -30,12 +30,25 @@ Wren (copper curls, a daisy clip, a lavender petal dress and butterfly wings) is
 - Generous controls: coyote time, jump buffering, gliding, soft knockback and invulnerability after a hit.
 - Tutorial signs pop up a speech bubble when Wren walks past them.
 - Dust comes back after a knockout, and flying over the goal gate still counts.
-- The cloud rests in the last level form a stairway, so running out of flight time is never a dead end.
+- Every big flying gap has rest spots below (docks, crystal ledges, ice ledges, branches, wafers, rainbow bridges,
+  cloud rests) spaced as a stairway, so running out of flight time is never a dead end.
 
 ## The levels
 1. **Blossom Meadow** (sunny day): the tutorial level, with signs, a first moving platform and an optional sky route.
 2. **Glowshroom Woods** (twilight forest): bouncy mushrooms, up-and-down platforms, a cave, and a cliff you fly up.
-3. **Starlight Clouds** (night sky): cloud islands, big gaps to fly across, and the Starlight Castle.
+3. **Seashell Shore** (sunny beach): hop over the waves, cross piers and a drifting raft, spring up a sea cliff with
+   a clam shell, and fly over the open sea.
+4. **Crystal Caverns** (underground): low tunnels, an elevator pit, glowing crystal ledges and a deep chasm to fly
+   across, then a spring up to the high gallery.
+5. **Frosty Peaks** (snowy mountain): the ground climbs higher and higher, a snow-cushion spring up the cliff, and a
+   flight over the Icy Gorge to the summit.
+6. **Applewood Orchard** (autumn afternoon): hop up apple-tree branches, bounce on a pumpkin into the old apple tree,
+   ride a lift and a log, then fly over the orchard valley.
+7. **Sugarplum Valley** (candy land): candy-corn spikes, a marshmallow spring up the layer cake, gumdrop pillars over
+   a gorge, and a flight across Sugarplum Gorge.
+8. **Rainbow Falls** (waterfalls): lily pads over plunge pools, a bubble spring up the tall cliff, and a flight across
+   the Great Waterfall on the way up to the clouds.
+9. **Starlight Clouds** (night sky): cloud islands, big gaps to fly across, and the Starlight Castle.
 
 ## Project layout
 ```
@@ -45,7 +58,7 @@ scenes/player/   Player (movement, dust & flight) and FairyArt (code-drawn Wren)
 scenes/entities/ Pickups, enemies, hazards, platforms, checkpoint, goal, signs
 scenes/level/    Level builder, TileRenderer, parallax Backdrop, Autopilot (dev tool)
 scenes/ui/       Title, HUD, pause menu, victory screen
-levels/          level_1.tres … level_3.tres (plain-text layouts)
+levels/          level_1.tres … level_9.tres (plain-text layouts)
 ui/              Global UI theme
 ```
 
@@ -67,18 +80,21 @@ A spring launches about 7 tiles up. For an `M` platform, leave a 7-tile gap cent
 For a `V` platform, leave a 3-tile gap.
 
 To add a level, create a new `.tres` from an existing one and append its path to `LEVELS` in `autoload/game.gd`.
-The `theme` field picks the art style and enemies: `meadow`, `woods` or `sky`.
+The `theme` field picks the art style, enemies and music: `meadow`, `woods`, `beach`, `caves`, `peaks`, `orchard`,
+`candy`, `falls` or `sky`.
+The title screen's level menu is built from `LEVELS`, so new levels show up there automatically.
 
 ## Developer shortcuts
 Pass these after `--` on the command line:
 ```
 godot --path . -- --level 2                # jump straight into level 2
-godot --path . -- --level 3 --column 120   # ...starting at tile column 120
+godot --path . -- --level 9 --column 120   # ...starting at tile column 120
 godot --path . -- --level 1 --fly          # ...already flying
 godot --headless --path . --fixed-fps 60 -- --level 2 --autoplay --quit-when-done
                                            # a bot plays the level and reports if it finished
 ```
-All three levels pass the autoplay check with zero knockouts.
+All nine levels pass the autoplay check. The bot prints the column of any knockout, which helps when tuning a level.
+Level 2 occasionally gets one knockout because its critters start at random positions.
 
 ## Code conventions
 - Every declaration is statically typed. `debug/gdscript/warnings/untyped_declaration` is set to **Error**, so untyped
