@@ -89,6 +89,9 @@ Handy physics numbers: a jump clears **3 tiles up** and about **5 across**, or r
 A spring launches about 7 tiles up. For an `M` platform, leave a 7-tile gap centred on the `M`.
 For a `V` platform, leave a 3-tile gap.
 
+Layouts are long single-line strings, so `python3 tools/show_level.py 7` prints a level as a grid with column numbers,
+and `python3 tools/show_level.py --check` checks every level for common mistakes.
+
 To add a level, create a new `.tres` from an existing one and append its path to `LEVELS` in `autoload/game.gd`.
 The `theme` field picks the art style, enemies and music: `meadow`, `woods`, `beach`, `caves`, `peaks`, `orchard`,
 `candy`, `falls`, `sky` or `castle`.
