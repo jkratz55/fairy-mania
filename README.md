@@ -13,8 +13,8 @@ Wren (copper curls, a daisy clip, a lavender petal dress and butterfly wings) is
 | Action | Keyboard | Controller (Xbox / PlayStation) |
 |---|---|---|
 | Move | Arrow keys / A, D | Left stick / D-pad |
-| Jump | Space / Z / K / Up / W | A / ✕ |
-| Fly higher / lower | Hold Jump or Up / hold Down | A / ✕ or stick up / stick down |
+| Jump | Space / Z / K / Up / W | A or B / ✕ or ○ |
+| Fly higher / lower | Hold Jump or Up / hold Down | A or B / ✕ or ○, or stick up / stick down |
 | Pause | Esc / P | Menu / Options (Start) |
 | Menus | Arrows + Enter/Space, Esc to go back | D-pad or stick + A / ✕, B / ○ to go back |
 | Fullscreen | F11 | — |
